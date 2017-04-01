@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+zuul:
+  ignoredServices: '*'
+  routes:
+    user:
+      path: /user/**
+      serviceId: user_service
+      sensitive-headers: Cookie,Set-Cookie,Authorization
+      stripPrefix: false
+    park:
+      path: /park/**
+      serviceId: park_service
+      sensitive-headers: Cookie,Set-Cookie,Authorization
+      stripPrefix: false
+    order:
+      path: /order/**
+      serviceId: order_service
+      sensitive-headers: Cookie,Set-Cookie,Authorization
+      stripPrefix: false
+    static:
+      path: /static/**
+
+# user 路由的ribbon参数配置
+user:
+  ribbon:
+    ReadTimeout: 15000
+    ConnectTimeout: 3000
+    MaxAutoRetries: 2
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 8761
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 10
+    instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
+  client:
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+
+hystrix:
+  command:
+    user_service:    #default
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 15000
+
+
+logging:
+  level:
+    org.springframework.cloud.sleuth: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.boot: INFO
+    org.springframework.cloud.security.oauth2: DEBUG
+    com.netflix.discovery: 'OFF'
+    ROOT: INFO

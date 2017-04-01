@@ -1,0 +1,16 @@
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    a-s-g-cache-expiry-timeout-ms: 5000
+    peer-eureka-status-refresh-time-interval-ms: 5000
+    enable-self-preservation: false

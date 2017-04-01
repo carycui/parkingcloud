@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: gateway_service
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:${config.port:8888}
+          #In some cases, it may be desirable to fail startup of a service if it cannot connect to the Config Server.
+          # If this is the desired behavior, set the bootstrap configuration property spring.cloud.config.failFast=true
+          # and the client will halt with an Exception.
+      fail-fast: false
+      discovery:
+        enabled: true
+        service-id: config_service
