@@ -1,0 +1,62 @@
+# server
+server:
+  port: 8500
+
+# json web token
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 604800
+
+# logging
+logging:
+  level:
+    #org.springframework.security: DEBUG
+    com.parkingcloud.auth: DEBUG
+
+#  eureka
+eureka:
+  client:
+    #healthcheck:
+      #enabled: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    lease-expiration-duration-in-seconds: 10
+    instance-id: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
+
+# datasource
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/db_parkingcloud?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    driver-class-name:  com.mysql.jdbc.Driver
+    username: user
+    password: user
+    schema : classpath:init-sql/schema.sql
+    continueOnError : true
+    initialSize : 5
+    minIdle : 5
+    maxActive : 20
+    maxWait : 60000
+    timeBetweenEvictionRunsMillis : 60000
+    validationQuery : SELECT 1
+    testWhileIdle : true
+    testOnBorrow : false
+    testOnReturn : false
+    poolPreparedStatements : true
+    maxPoolPreparedStatementPerConnectionSize : 20
+    filters : stat
+    connectionProperties : druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+# mybatis
+mybatis:
+  type-aliases-package: com.parkingcloud.auth
+  #mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+    default-fetch-size: 200
+    default-executor-type: simple
+    default-statement-timeout: 30
